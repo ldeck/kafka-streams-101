@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+
+function usage {
+  echo "Usage: $(basename $0) <topic>"
+  exit $1
+}
+
+if [ $# -ne 1 ]; then
+  usage 1
+fi
+
+topic="$1"
+case "$topic" in
+  -h|--help)
+    usage 0 ;;
+  *)
+    ;;
+esac
+
+tmpfile=$(mktemp)
+trap 'rm -f -- "$tmpfile"' INT TERM HUP EXIT
+
+# Lets do some magic for the tmpfile to be removed when this script ends, even if it crashes
+exec {FD_W}>"$tmpfile"  # Create file descriptor for writing, using first number available
+exec {FD_R}<"$tmpfile"  # Create file descriptor for reading, using first number available
+# rm "$tmpfile"  # Delete the file, but file descriptors keep available for this script
+
+json_fmt='{ "partitions": [ { "topic": "%s", "partition": 1, "offset": -1 } ], "version": 1 }\n'
+
+printf "$json_fmt" "$topic" >&$FD_W
+
+echo "Using offset json: $(cat <&$FD_R)"
+
+kafka-delete-records --bootstrap-server localhost:9092 --offset-json-file $tmpfile
