@@ -1,0 +1,33 @@
+BOOTSTRAP_ID=${BOOTSTRAP_ID:-localhost:9092}
+
+kafka-topics \
+  --bootstrap-server ${BOOTSTRAP_ID} \
+  --topic orders-by-user \
+  --create
+
+kafka-topics \
+  --bootstrap-server ${BOOTSTRAP_ID} \
+  --topic discount-profiles-by-user \
+  --create \
+  --config "cleanup.policy=compact"
+
+kafka-topics \
+  --bootstrap-server ${BOOTSTRAP_ID} \
+  --topic discounts \
+  --create \
+  --config "cleanup.policy=compact"
+
+kafka-topics \
+  --bootstrap-server ${BOOTSTRAP_ID} \
+  --topic orders \
+  --create
+
+kafka-topics \
+  --bootstrap-server ${BOOTSTRAP_ID} \
+  --topic payments \
+  --create
+
+kafka-topics \
+  --bootstrap-server ${BOOTSTRAP_ID} \
+  --topic paid-orders \
+  --create

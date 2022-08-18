@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+BOOTSTRAP_ID=${BOOTSTRAP_ID:-localhost:9092}
 
 function usage {
   echo "Usage: $(basename $0) <topic>"
@@ -32,4 +33,4 @@ printf "$json_fmt" "$topic" >&$FD_W
 
 echo "Using offset json: $(cat <&$FD_R)"
 
-kafka-delete-records --bootstrap-server localhost:9092 --offset-json-file $tmpfile
+kafka-delete-records --bootstrap-server ${BOOTSTRAP_ID} --offset-json-file $tmpfile

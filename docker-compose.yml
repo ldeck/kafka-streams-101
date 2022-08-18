@@ -21,6 +21,9 @@ services:
       - "29092:29092"
       - "59092:9092"
       - "9101:9101"
+    volumes:
+      - ./bin/create-topics:/usr/local/bin/create-topics
+      - ./bin/clean-topic:/usr/local/bin/clean-topic
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:52181'
